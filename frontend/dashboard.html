@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CRM Dashboard</title>
+
+<link rel="stylesheet" href="dashboard.css">
+
+<link rel="stylesheet"
+href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+
+</head>
+
+<body>
+  <!-- Loading Spinner -->
+<div id="loader" class="loader-wrapper">
+
+    <div class="loader"></div>
+
+</div>
+    <div class="notification-box">
+
+  <button class="bell-btn">
+    🔔
+    <span id="notificationCount">0</span>
+  </button>
+
+</div>
+
+<!-- SIDEBAR -->
+<div class="sidebar">
+
+<h2 id="sidebarCompanyName">CRM SYSTEM</h2>
+
+<ul>
+
+<li onclick="setActiveMenu(this); showSection('dashboardSection')">
+<i class="fas fa-home"></i> Dashboard
+</li>
+
+<li onclick="setActiveMenu(this); showSection('analyticsSection')">
+<i class="fas fa-chart-pie"></i> Analytics
+</li>
+
+<li onclick="setActiveMenu(this); showSection('customersPanel')">
+<i class="fas fa-users"></i> Customers
+</li>
+
+<li onclick="setActiveMenu(this); showSection('reportsSection')">
+<i class="fas fa-file-alt"></i> Reports
+</li>
+<li onclick="setActiveMenu(this); showSection('calendarSection')">
+  <i class="fas fa-calendar"></i> Calendar
+</li>
+<li onclick="setActiveMenu(this); showSection('settingsSection')">
+<i class="fas fa-cog"></i> Settings
+</li>
+
+</ul>
+
+<button class="logout-btn" onclick="logout()">
+Logout
+</button>
+
+</div>
+<!-- MAIN CONTENT -->
+<div class="main-content">
+
+<h1 id="mainWelcomeHeader">Welcome Admin</h1>
+
+<button id="themeBtn" onclick="toggleTheme()">
+Dark Mode
+</button>
+
+<!-- DASHBOARD -->
+<div id="dashboardSection">
+
+<div class="cards-container">
+
+<div class="card">
+<h2>Total Customers</h2>
+<p id="totalCustomers">0</p>
+</div>
+
+<div class="card">
+<h2>Lead</h2>
+<p id="leadCustomers">0</p>
+</div>
+
+<div class="card">
+<h2>Contacted</h2>
+<p id="contactedCustomers">0</p>
+</div>
+
+<div class="card">
+<h2>Qualified</h2>
+<p id="qualifiedCustomers">0</p>
+</div>
+
+<div class="card">
+<h2>Customer</h2>
+<p id="customerCustomers">0</p>
+</div>
+
+</div>
+
+<!-- ADD CUSTOMER -->
+<div class="form-box">
+
+<h2>Add Customer</h2>
+
+<input type="text" id="name" placeholder="Customer Name">
+
+<input type="email" id="email" placeholder="Customer Email">
+
+<input type="text" id="phone" placeholder="Phone Number">
+
+<input type="file" id="customerImage">
+
+<select id="status">
+<option value="Lead">Lead</option>
+<option value="Contacted">Contacted</option>
+<option value="Qualified">Qualified</option>
+<option value="Customer">Customer</option>
+</select>
+
+<label>Follow Up Date</label>
+
+<input type="date" id="followUpDate">
+
+<textarea id="notes"
+placeholder="Customer Notes"></textarea>
+
+<button onclick="addCustomer()">
+Add Customer
+</button>
+
+</div>
+
+<!-- RECENT ACTIVITY -->
+<div class="activity-box">
+
+<h2>Recent Activity</h2>
+
+<ul id="activityList">
+<li>🚀 CRM Started</li>
+</ul>
+
+</div>
+
+<!-- FOLLOW UPS -->
+<div class="followup-card">
+
+<h2>Today's Follow Ups</h2>
+
+<h1 id="followUpsToday">0</h1>
+
+<ul id="followupList">
+<li>Loading...</li>
+</ul>
+
+</div>
+
+</div>
+
+
+<!-- CUSTOMERS PANEL -->
+<div id="customersPanel" style="display:none;">
+
+<div class="top-controls">
+
+<button onclick="downloadPDF()">
+Download PDF
+</button>
+
+<button onclick="downloadExcel()">
+Download Excel
+</button>
+
+<select id="filterStatus" onchange="loadCustomers()">
+
+<option value="All">All Customers</option>
+<option value="Lead">Lead</option>
+<option value="Contacted">Contacted</option>
+<option value="Qualified">Qualified</option>
+<option value="Customer">Customer</option>
+
+</select>
+
+<select id="sortCustomers" onchange="loadCustomers()">
+
+<option value="default">Sort</option>
+<option value="az">A-Z</option>
+<option value="za">Z-A</option>
+
+</select>
+
+</div>
+
+<div class="search-row">
+
+<input
+type="text"
+id="searchInput"
+placeholder="Search Customer..."
+onkeyup="searchCustomer()">
+
+</div>
+
+<table id="customerTable">
+
+<thead>
+<tr>
+<th>ID</th>
+<th>Image</th>
+<th>Name</th>
+<th>Email</th>
+<th>Phone</th>
+<th>Status</th>
+<th>Date</th>
+<th>Follow Up</th>
+<th>Notes</th>
+<th>Actions</th>
+</tr>
+</thead>
+
+<tbody id="customerBody">
+
+</tbody>
+
+</table>
+
+<div id="pagination">
+
+<button onclick="previousPage()">
+Prev
+</button>
+
+<span id="pageNumber">
+1
+</span>
+
+<button onclick="nextPage()">
+Next
+</button>
+
+</div>
+
+</div>
+
+
+<!-- ANALYTICS -->
+<<div id="analyticsSection" style="display:none;">
+
+<h1>📊 Analytics Dashboard</h1>
+
+<div class="analytics-grid">
+
+<div class="chart-box">
+<h2>Status Distribution</h2>
+<canvas id="myChart"></canvas>
+</div>
+
+<div class="chart-box">
+<h2>Monthly Customer Growth</h2>
+<canvas id="growthChart"></canvas>
+</div>
+
+</div>
+
+</div>
+<!-- REPORTS -->
+<div id="reportsSection" style="display:none;">
+
+  <h1>📋 Reports</h1>
+
+  <div class="cards-container">
+
+    <div class="card">
+      <h2>Total Customers</h2>
+      <p id="reportTotal">0</p>
+    </div>
+
+    <div class="card">
+      <h2>Lead</h2>
+      <p id="reportLead">0</p>
+    </div>
+
+    <div class="card">
+      <h2>Contacted</h2>
+      <p id="reportContacted">0</p>
+    </div>
+
+    <div class="card">
+      <h2>Qualified</h2>
+      <p id="reportQualified">0</p>
+    </div>
+
+    <div class="card">
+      <h2>Customer</h2>
+      <p id="reportCustomer">0</p>
+    </div>
+
+  </div>
+
+  <div class="top-controls">
+
+    <button onclick="downloadPDF()">
+📄 PDF
+</button>
+
+<button onclick="downloadExcel()">
+📊 Excel
+</button>
+
+<button onclick="document.getElementById('csvFile').click()">
+📥 Import CSV
+</button>
+
+<input
+type="file"
+id="csvFile"
+accept=".csv"
+style="display:none"
+onchange="importCSV(event)">
+
+  </div>
+
+</div>
+
+<button onclick="backupDatabase()">
+💾 Backup Database
+</button>
+
+<input
+type="file"
+id="backupFile"
+accept=".json"
+style="display:none"
+onchange="restoreDatabase(event)">
+
+<button onclick="document.getElementById('backupFile').click()">
+♻ Restore Database
+</button>
+<!-- CALENDAR SECTION -->
+<div id="calendarSection" style="display:none;">
+
+<h1>📅 CRM Calendar</h1>
+
+<div class="calendar-container">
+
+<div class="calendar-header">
+
+<button onclick="previousMonth()">◀</button>
+
+<h2 id="monthYear"></h2>
+
+<button onclick="nextMonth()">▶</button>
+
+</div>
+
+<div id="calendarGrid" class="calendar-grid"></div>
+
+</div>
+
+<div class="calendar-followups">
+
+<h2>Follow-ups</h2>
+
+<ul id="calendarList">
+
+<li>Select a highlighted date</li>
+
+</ul>
+
+</div>
+
+</div>
+
+<!-- SETTINGS HOME -->
+<div id="settingsSection" style="display:none;">
+
+<h1>⚙ Settings</h1>
+
+<div class="setting-card" onclick="showSection('accountPage')">
+<h3>👤 Account Settings</h3>
+<p>Profile, password and theme</p>
+</div>
+
+<div class="setting-card" onclick="showSection('languagePage')">
+<h3>🌐 Language</h3>
+<p>English, Telugu, Hindi</p>
+</div>
+
+<div class="setting-card" onclick="showSection('accessibilityPage')">
+<h3>♿ Accessibility</h3>
+<p>Font size and contrast</p>
+</div>
+
+<div class="setting-card" onclick="showSection('notificationPage')">
+<h3>🔔 Notification Settings</h3>
+<p>Email and follow-up alerts</p>
+</div>
+
+<div class="setting-card" onclick="showSection('securityPage')">
+<h3>🔐 Security</h3>
+<p>Password and privacy</p>
+</div>
+
+<div class="setting-card logout-card" onclick="logout()">
+<h3>🚪 Logout</h3>
+<p>Sign out from CRM</p>
+</div>
+
+</div>
+<!-- ACCOUNT PAGE -->
+<div id="accountPage" style="display:none;">
+    <h1>👤 Account Settings</h1>
+<form class="form-box" onsubmit="saveSettings(event)">
+
+    <div style="text-align:center;margin-bottom:20px;">
+
+        <img
+            id="profilePreview"
+            src="https://cdn-icons-png.flaticon.com/512/149/149071.png"
+            style="
+                width:120px;
+                height:120px;
+                border-radius:50%;
+                object-fit:cover;
+                border:4px solid #4f46e5;
+            ">
+
+        <br><br>
+
+        <input
+            type="file"
+            id="profileImage">
+
+    </div>
+
+    <input
+        type="text"
+        id="companyName"
+        placeholder="Company Name">
+
+    <input
+        type="text"
+        id="adminName"
+        placeholder="Admin Name">
+
+    <input
+        type="password"
+        id="newPassword"
+        placeholder="New Password">
+
+    <button type="submit">
+        Save Changes
+    </button>
+
+</form>
+   
+    
+</div>
+
+<!-- LANGUAGE PAGE -->
+<div id="languagePage" style="display:none;">
+    <h1>🌐 Language Settings</h1>
+
+    <div class="form-box">
+        <select>
+            <option>English</option>
+            <option>Telugu</option>
+            <option>Hindi</option>
+        </select>
+    </div>
+</div>
+
+<!-- ACCESSIBILITY PAGE -->
+<div id="accessibilityPage" style="display:none;">
+    <h1>♿ Accessibility</h1>
+
+    <div class="form-box">
+        <button type="button">Small Font</button>
+<button type="button">Medium Font</button>
+<button type="button">Large Font</button>
+    </div>
+</div>
+
+<!-- NOTIFICATION PAGE -->
+<div id="notificationPage" style="display:none;">
+    <h1>🔔 Notifications</h1>
+
+    <div class="form-box">
+        Email Alerts
+    </div>
+</div>
+
+<!-- SECURITY PAGE -->
+<div id="securityPage" style="display:none;">
+    <h1>🔐 Security</h1>
+
+    <div class="form-box">
+        Change Password
+    </div>
+</div>
+<!-- ================= EDIT CUSTOMER MODAL ================= -->
+<div id="editModal" class="modal">
+
+<form class="modal-content">
+
+<span onclick="closeEditModal()">&times;</span>
+
+<h2>Edit Customer</h2>
+
+<input type="hidden" id="editId">
+<input
+type="text"
+id="editName"
+placeholder="Customer Name">
+
+<input
+type="email"
+id="editEmail"
+placeholder="Customer Email">
+
+<input
+type="text"
+id="editPhone"
+placeholder="Phone Number">
+
+<select id="editStatus">
+
+<option value="Lead">Lead</option>
+<option value="Contacted">Contacted</option>
+<option value="Qualified">Qualified</option>
+<option value="Customer">Customer</option>
+
+</select>
+
+<label style="color:#d1d5db; display:block; margin: 10px 0 5px 0; text-align:left;">Follow Up Date</label>
+<input type="date" id="editFollowUpDate" style="width:100%; padding:12px; margin-bottom:15px; border:none; border-radius:10px; background:#334155; color:white; font-size:16px;">
+
+<textarea id="editNotes" placeholder="Customer Notes" style="width:100%; padding:12px; margin-bottom:15px; border:none; border-radius:10px; background:#334155; color:white; font-size:16px; min-height:80px;"></textarea>
+
+<button type="button" onclick="updateCustomer()">
+Update Customer
+</button>
+
+</form>
+
+</div>
+<!-- VIEW CUSTOMER MODAL -->
+<div id="customerModal" class="modal">
+
+    <div class="customer-profile">
+
+        <span class="close-btn" onclick="closeModal()">&times;</span>
+
+        <div id="modalData"></div>
+
+    </div>
+
+</div>
+
+
+</div>
+<!-- END OF MAIN CONTENT -->
+
+
+<!-- ================= SCRIPTS ================= -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/xlsx/dist/xlsx.full.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script src="https://cdn.jsdelivr.net/npm/papaparse@5.4.1/papaparse.min.js"></script>
+
+<script src="dashboard.js"></script>
+
+</body>
+</html>

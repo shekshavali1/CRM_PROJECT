@@ -1,0 +1,47 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Signup Page</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <h1>CRM SYSTEM</h1>
+            <h2>Create Account</h2>
+            
+            <form onsubmit="signup(event)">
+                <!-- NAME -->
+                <input type="text" id="name" placeholder="Enter Full Name" required>
+                <br><br>
+                
+                <!-- EMAIL -->
+                <input type="email" id="email" placeholder="Enter Email" required>
+                <br><br>
+                
+                <!-- PASSWORD -->
+                <input type="password" id="password" placeholder="Enter Password" required>
+                <p class="password-text">
+                    Password must contain:
+                    1 Uppercase, 1 Number, 1 Special Character
+                </p>
+                <br>
+                
+                <!-- SIGNUP BUTTON -->
+                <button type="submit" class="signup-btn">
+                    Sign Up
+                </button>
+            </form>
+            
+            <br><br>
+            <p class="link-text">
+                Already have an account?
+                <a href="index.html">Login</a>
+            </p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>

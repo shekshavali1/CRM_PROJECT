@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>CRM Login</title>
+
+<link rel="stylesheet" href="style.css">
+
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<style>
+*{
+margin:0;
+padding:0;
+box-sizing:border-box;
+font-family:Arial,sans-serif;
+}
+
+body{
+height:100vh;
+display:flex;
+justify-content:center;
+align-items:center;
+background:linear-gradient(135deg,#2563eb,#1e3a8a);
+}
+
+.login-box{
+background:#fff;
+padding:40px;
+border-radius:15px;
+width:380px;
+box-shadow:0 15px 40px rgba(0,0,0,.2);
+text-align:center;
+}
+
+.login-box h1{
+margin-bottom:25px;
+color:#2563eb;
+}
+
+.login-box input{
+width:100%;
+padding:12px;
+margin:12px 0;
+border:1px solid #ccc;
+border-radius:8px;
+font-size:15px;
+}
+
+.login-box button{
+width:100%;
+padding:13px;
+margin-top:15px;
+background:#2563eb;
+color:white;
+border:none;
+border-radius:8px;
+font-size:16px;
+cursor:pointer;
+transition:.3s;
+}
+
+.login-box button:hover{
+background:#1d4ed8;
+}
+
+.login-box p{
+margin-top:20px;
+}
+
+.login-box a{
+text-decoration:none;
+color:#2563eb;
+font-weight:bold;
+}
+</style>
+
+</head>
+<body>
+
+<div class="login-box">
+
+<h1>CRM Login</h1>
+
+<input
+type="email"
+id="email"
+placeholder="Enter Email">
+
+<input
+type="password"
+id="password"
+placeholder="Enter Password">
+
+<button onclick="login()">
+Login
+</button>
+
+<p>
+Don't have an account?
+<a href="signup.html">
+Sign Up
+</a>
+</p>
+
+</div>
+
+<script>
+
+async function login(){
+
+const email=document.getElementById("email").value.trim();
+const password=document.getElementById("password").value.trim();
+
+if(!email || !password){
+
+Swal.fire(
+"Error",
+"Please enter email and password",
+"error"
+);
+
+return;
+}
+
+try{
+
+const response=await fetch("http://localhost:5000/login",{
+
+method:"POST",
+
+headers:{
+"Content-Type":"application/json"
+},
+
+body:JSON.stringify({
+email,
+password
+})
+
+});
+
+const data=await response.json();
+
+if(!response.ok){
+
+Swal.fire(
+"Login Failed",
+data.message,
+"error"
+);
+
+return;
+}
+
+localStorage.setItem("token",data.token);
+
+Swal.fire({
+icon:"success",
+title:"Login Successful",
+timer:1500,
+showConfirmButton:false
+});
+
+setTimeout(()=>{
+
+window.location.href="dashboard.html";
+
+},1500);
+
+}
+
+catch(err){
+
+console.log(err);
+
+Swal.fire(
+"Server Error",
+"Cannot connect to backend.",
+"error"
+);
+
+}
+
+}
+
+</script>
+
+</body>
+</html>

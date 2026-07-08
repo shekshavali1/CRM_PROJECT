@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRM Login</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="box">
+            <h1>CRM SYSTEM</h1>
+            <h2>Welcome Back</h2>
+            
+            <form onsubmit="login(event)">
+                <input type="email" id="email" placeholder="Enter Email" required>
+                <br><br>
+                <input type="password" id="password" placeholder="Enter Password" autocomplete="current-password" required>
+                <p class="password-text">
+                    Use a strong password for better security
+                </p>
+                <br>
+                <button type="submit" class="login-btn">
+                    Login
+                </button>
+            </form>
+            
+            <br><br>
+            <p class="link-text">
+                Don't have an account?
+                <a href="signup.html">Sign Up</a>
+            </p>
+        </div>
+    </div>
+    <script src="script.js"></script>
+</body>
+</html>
